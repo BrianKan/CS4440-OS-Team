@@ -12,7 +12,7 @@ char *args[MAX_LINE/2 + 1]; /* command line arguments */
 char userInput[MAX_LINE/2+1];
 char copyInput[MAX_LINE/2+1];
 char *split;
-const char *history[MAX_LINE/2+1][MAX_LINE/2+1];
+char history[MAX_LINE/2+1][MAX_LINE/2+1];
 
 int historyC=0;
 int entry=0;
@@ -26,6 +26,8 @@ fflush(stdout);
 * (2) the child process will invoke execvp()
 * (3) if command included &, parent will invoke wait()
 */
+
+
 if(!fgets(userInput,MAX_LINE,stdin))
 break;
 size_t length=strlen(userInput);
@@ -45,19 +47,34 @@ while (split != NULL)
   }
 args[argc]=NULL;
 /* Save History Function??? */
-	int i;
-	for(i=0;i<3;i++){
-	history[historyC][entry]=args[i];
-	historyC++;
-}
-printf("%s",history[0][0]);
+	for(historyC=0;historyC<10;historyC++){
+	if(args[historyC]!=0)
+	history[entry][historyC]=*args[historyC];
+	else;
+		}
+	entry++;
+/* End of Function */
+
+
 if(strcmp("exit",args[0])==0){
 should_run=0;
 }
 else{
 pid_t pid;
 pid = fork();
+/* Child Process */
 if (pid==0){
+
+
+
+if(strcmp("history",args[0])==0){
+	int i2,i3;
+	for(i2=0;i2<sizeof(history[i2])-1;i2++)
+		for(i3=0;i3<sizeof(history[i2][i3])-1;i3++){
+			printf("%s",history[i2][i3]);
+			}
+}
+else
 execvp(args[0],args);
 
 }
